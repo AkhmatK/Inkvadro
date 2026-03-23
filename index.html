@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Домбай Квадро | Экскурсии на квадроциклах в Домбае</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #cc0a0a;
+            --primary-light: #e8292b;
+            --secondary: #1a1a2e;
+            --dark: #0f0f1a;
+            --light: #f5f5f7;
+            --accent: #ff4444;
+            --gradient-1: linear-gradient(135deg, #cc0a0a, #e8292b);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #333; overflow-x: hidden;
+            background: var(--dark); font-size: 14px;
+        }
+
+        /* PRELOADER */
+        .preloader {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--dark); z-index: 99999;
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        .preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .preloader-spinner {
+            width: 44px; height: 44px;
+            border: 3px solid rgba(204,10,10,0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .preloader-text {
+            color: white; margin-top: 16px;
+            font-weight: 600; letter-spacing: 3px;
+            text-transform: uppercase; font-size: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* NAV */
+        .navbar {
+            position: fixed; top: 0; left: 0;
+            width: 100%; z-index: 1000;
+            padding: 14px 0; transition: all 0.4s;
+        }
+        .navbar.scrolled {
+            background: rgba(15,15,26,0.97);
+            backdrop-filter: blur(16px);
+            padding: 8px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        .nav-container {
+            max-width: 1100px; margin: 0 auto;
+            padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; color: white;
+        }
+        .logo-icon {
+            width: 38px; height: 38px;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: white;
+        }
+        .logo-text {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+        .logo-text span { color: var(--primary); }
+
+        .nav-links {
+            display: flex; list-style: none;
+            gap: 26px; align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500; font-size: 12px;
+            text-transform: uppercase; letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        .nav-phone {
+            display: flex; align-items: center; gap: 8px;
+            color: white; text-decoration: none;
+            font-weight: 600; font-size: 13px;
+        }
+        .nav-phone i {
+            width: 34px; height: 34px;
+            background: var(--primary); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .burger {
+            display: none; flex-direction: column;
+            gap: 5px; cursor: pointer; z-index: 1001;
+        }
+        .burger span {
+            width: 26px; height: 2px;
+            background: white; border-radius: 2px;
+            transition: all 0.3s;
+        }
+        .burger.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+        .burger.active span:nth-child(2) { opacity: 0; }
+        .burger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh; position: relative;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                linear-gradient(135deg, rgba(10,5,15,0.6), rgba(20,10,30,0.4), rgba(204,10,10,0.15)),
+                linear-gradient(180deg,
+                    #0a1628 0%, #1a4060 28%, #2a6848 42%, #4a8a5a 52%,
+                    #7aaa6a 60%, #aac88a 68%, #d4c8a0 74%, #8a7858 87%, #2a2018 100%);
+        }
+        .hero-mountains {
+            position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 35%; z-index: 2;
+        }
+        .hero-mountains svg { width: 100%; height: 100%; }
+        .hero-content {
+            position: relative; z-index: 10;
+            text-align: center; max-width: 760px; padding: 0 20px;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(204,10,10,0.12);
+            border: 1px solid rgba(204,10,10,0.3);
+            border-radius: 50px; padding: 8px 20px;
+            color: var(--accent);
+            font-weight: 600; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 22px;
+        }
+        .hero h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(36px, 7vw, 72px);
+            font-weight: 900; color: white;
+            text-transform: uppercase; line-height: 1.08;
+            margin-bottom: 18px;
+            text-shadow: 0 3px 20px rgba(0,0,0,0.4);
+        }
+        .hero h1 span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-subtitle {
+            font-size: clamp(13px, 2vw, 17px);
+            color: rgba(255,255,255,0.85);
+            line-height: 1.7; margin-bottom: 36px;
+        }
+        .hero-subtitle strong { color: var(--accent); }
+        .hero-buttons {
+            display: flex; gap: 14px;
+            justify-content: center; flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 13px 30px; border-radius: 50px;
+            font-weight: 700; font-size: 13px;
+            text-transform: uppercase; letter-spacing: 1px;
+            text-decoration: none; transition: all 0.3s;
+            cursor: pointer; border: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-primary {
+            background: var(--gradient-1); color: white;
+            box-shadow: 0 6px 24px rgba(204,10,10,0.35);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 36px rgba(204,10,10,0.45);
+        }
+        .btn-telegram {
+            background: #0088cc; color: white;
+            box-shadow: 0 6px 24px rgba(0,136,204,0.3);
+        }
+        .btn-telegram:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 36px rgba(0,136,204,0.4);
+        }
+        .btn-outline {
+            background: transparent; color: white;
+            border: 2px solid rgba(255,255,255,0.25);
+        }
+        .btn-outline:hover {
+            background: white; color: var(--dark);
+        }
+        .hero-stats {
+            display: flex; gap: 40px;
+            justify-content: center; margin-top: 55px;
+        }
+        .hero-stat { text-align: center; }
+        .hero-stat-number {
+            font-family: 'Oswald', sans-serif;
+            font-size: 38px; font-weight: 700;
+            color: var(--accent);
+        }
+        .hero-stat-label {
+            color: rgba(255,255,255,0.6);
+            font-size: 11px; text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .urgency-banner {
+            background: rgba(204,10,10,0.06);
+            border: 1px solid rgba(204,10,10,0.15);
+            border-radius: 14px; padding: 20px 28px;
+            text-align: center; margin-top: 40px; color: white;
+        }
+        .urgency-banner i { color: var(--accent); margin-right: 8px; }
+        .urgency-banner strong { color: var(--accent); }
+        .scroll-indicator {
+            position: absolute; bottom: 28px;
+            left: 50%; transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+        .scroll-indicator a {
+            color: rgba(255,255,255,0.4);
+            font-size: 24px; text-decoration: none;
+        }
+        @keyframes bounce {
+            0%,20%,50%,80%,100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-12px); }
+        }
+
+        /* SECTIONS */
+        section { padding: 80px 0; }
+        .container {
+            max-width: 1000px; margin: 0 auto; padding: 0 24px;
+        }
+        .section-header { text-align: center; margin-bottom: 55px; }
+        .section-tag {
+            display: inline-flex; align-items: center; gap: 7px;
+            color: var(--primary);
+            font-weight: 700; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+        .section-tag::before, .section-tag::after {
+            content: ''; width: 24px; height: 2px;
+            background: var(--primary);
+        }
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(28px, 4.5vw, 42px);
+            font-weight: 800; text-transform: uppercase;
+        }
+        .section-title span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .section-desc {
+            max-width: 520px; margin: 14px auto 0;
+            color: #777; font-size: 14px; line-height: 1.7;
+        }
+
+        /* ADVANTAGES */
+        .advantages { background: var(--light); }
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .advantage-card {
+            background: white; border-radius: 16px;
+            padding: 30px 22px; text-align: center;
+            transition: all 0.3s;
+        }
+        .advantage-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+        }
+        .advantage-icon {
+            width: 60px; height: 60px;
+            background: rgba(204,10,10,0.08);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 24px; color: var(--primary);
+        }
+        .advantage-card h3 {
+            font-size: 15px; font-weight: 700;
+            margin-bottom: 10px; color: var(--secondary);
+        }
+        .advantage-card p {
+            color: #888; line-height: 1.6; font-size: 12px;
+        }
+
+        /* TOURS */
+        .tours { background: var(--dark); color: white; }
+        .tours .section-desc { color: rgba(255,255,255,0.45); }
+        .tours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+        .tour-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px; overflow: hidden;
+            transition: all 0.3s; position: relative;
+        }
+        .tour-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(204,10,10,0.3);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .tour-card.featured { border-color: var(--primary); }
+        .tour-badge {
+            position: absolute; top: 14px; right: 14px;
+            background: var(--primary); color: white;
+            padding: 4px 12px; border-radius: 16px;
+            font-size: 10px; font-weight: 700;
+            text-transform: uppercase; z-index: 5;
+        }
+        .tour-image {
+            height: 200px; position: relative; overflow: hidden;
+        }
+        .tour-image img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .tour-card:hover .tour-image img {
+            transform: scale(1.08);
+        }
+        .tour-image-overlay {
+            position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 50%;
+            background: linear-gradient(transparent, rgba(15,15,26,0.9));
+        }
+        .tour-difficulty {
+            position: absolute; bottom: 12px; left: 14px;
+        }
+        .tour-difficulty span {
+            padding: 3px 10px; border-radius: 16px;
+            font-size: 10px; font-weight: 600;
+            text-transform: uppercase;
+        }
+        .difficulty-easy { background: rgba(76,175,80,0.2); color: #4CAF50; }
+        .difficulty-medium { background: rgba(255,152,0,0.2); color: #FF9800; }
+        .difficulty-hard { background: rgba(244,67,54,0.2); color: #F44336; }
+        .tour-content { padding: 22px; }
+        .tour-content h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px; font-weight: 700;
+            text-transform: uppercase; margin-bottom: 8px;
+        }
+        .tour-content p {
+            color: rgba(255,255,255,0.5);
+            line-height: 1.65; font-size: 12px; margin-bottom: 18px;
+        }
+        .tour-meta {
+            display: flex; gap: 16px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 18px;
+        }
+        .tour-meta-item {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 12px; color: rgba(255,255,255,0.55);
+        }
+        .tour-meta-item i { color: var(--primary); }
+        .tour-footer {
+            display: flex; align-items: center;
+            justify-content: space-between;
+        }
+        .tour-price {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px; font-weight: 700;
+            color: var(--accent);
+        }
+        .tour-btn {
+            padding: 9px 22px;
+            background: var(--gradient-1);
+            color: white; border: none;
+            border-radius: 50px;
+            font-weight: 700; font-size: 11px;
+            text-transform: uppercase;
+            cursor: pointer; transition: all 0.3s;
+            text-decoration: none;
+        }
+        .tour-btn:hover {
+            box-shadow: 0 6px 20px rgba(204,10,10,0.35);
+            transform: translateY(-2px);
+        }
+
+        /* ABOUT */
+        .about { background: var(--light); }
+        .about-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 55px; align-items: center;
+        }
+        .about-visual {
+            position: relative; height: 400px;
+            border-radius: 20px; overflow: hidden;
+            box-shadow: 0 24px 50px rgba(0,0,0,0.15);
+        }
+        .about-visual img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .about-experience {
+            position: absolute; top: 16px; left: 16px;
+            background: var(--gradient-1); color: white;
+            padding: 18px 22px; border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(204,10,10,0.3);
+        }
+        .about-experience-number {
+            font-family: 'Oswald', sans-serif;
+            font-size: 36px; font-weight: 700;
+        }
+        .about-experience-text {
+            font-size: 10px; font-weight: 600;
+            text-transform: uppercase;
+        }
+        .about-float-card {
+            position: absolute; bottom: 16px; right: 16px;
+            background: white; border-radius: 14px;
+            padding: 16px 20px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .about-float-card i { font-size: 22px; color: var(--primary); }
+        .about-float-card strong {
+            font-size: 18px; font-family: 'Oswald', sans-serif;
+        }
+        .about-float-card span {
+            font-size: 10px; color: #999; text-transform: uppercase;
+        }
+        .about-content .section-tag { justify-content: flex-start; }
+        .about-content .section-tag::before { display: none; }
+        .about-content .section-title { text-align: left; color: var(--secondary); }
+        .about-text {
+            color: #666; line-height: 1.75;
+            font-size: 13px; margin: 18px 0 25px;
+        }
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px; margin-bottom: 28px;
+        }
+        .about-feature {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .about-feature i {
+            width: 30px; height: 30px;
+            background: rgba(204,10,10,0.08);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary); font-size: 12px;
+        }
+        .about-feature span { font-weight: 600; font-size: 12px; }
+
+        /* CONTACT */
+        .contact { background: var(--secondary); color: white; }
+        .contact .section-desc { color: rgba(255,255,255,0.45); }
+        .contact-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px; margin-top: 50px;
+        }
+        .contact-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px; padding: 30px;
+            text-align: center; transition: all 0.3s;
+        }
+        .contact-card:hover {
+            border-color: rgba(204,10,10,0.3);
+            transform: translateY(-4px);
+        }
+        .contact-card-icon {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; color: white;
+            margin: 0 auto 20px;
+        }
+        .contact-card-icon.tg { background: #0088cc; }
+        .contact-card-icon.phone { background: var(--primary); }
+        .contact-card-icon.map { background: #34a853; }
+        .contact-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px; margin-bottom: 10px;
+        }
+        .contact-card p {
+            color: rgba(255,255,255,0.5);
+            font-size: 13px; margin-bottom: 20px;
+        }
+        .contact-card .btn { width: 100%; justify-content: center; }
+
+        /* CTA */
+        .cta {
+            background: var(--gradient-1);
+            padding: 70px 0;
+            text-align: center; color: white;
+        }
+        .cta h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(28px, 4.5vw, 42px);
+            font-weight: 800; text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .cta p {
+            font-size: 14px; opacity: 0.9;
+            max-width: 500px; margin: 0 auto 30px;
+        }
+        .cta .btn-outline { border-color: white; color: white; }
+        .cta .btn-outline:hover { background: white; color: var(--primary); }
+
+        /* FAQ */
+        .faq { background: var(--light); }
+        .faq-grid { max-width: 680px; margin: 0 auto; }
+        .faq-item {
+            background: white; border-radius: 14px;
+            margin-bottom: 12px; overflow: hidden;
+        }
+        .faq-question {
+            width: 100%; padding: 18px 22px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: none; border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px; font-weight: 600;
+            color: var(--secondary);
+            cursor: pointer; text-align: left;
+        }
+        .faq-question i {
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+        .faq-item.active .faq-question i { transform: rotate(45deg); }
+        .faq-answer {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s;
+        }
+        .faq-answer-inner {
+            padding: 0 22px 18px;
+            color: #777; font-size: 12px; line-height: 1.7;
+        }
+        .faq-item.active .faq-answer { max-height: 300px; }
+
+        /* FOOTER */
+        .footer {
+            background: var(--dark); color: white;
+            padding: 55px 0 24px;
+        }
+        .footer-content {
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 20px;
+        }
+        .footer-brand p {
+            color: rgba(255,255,255,0.45);
+            margin-top: 10px; font-size: 12px;
+        }
+        .footer-links { display: flex; gap: 20px; }
+        .footer-links a {
+            color: rgba(255,255,255,0.5);
+            text-decoration: none; font-size: 12px;
+        }
+        .footer-links a:hover { color: var(--primary); }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: 30px; padding-top: 20px;
+            text-align: center;
+            color: rgba(255,255,255,0.35); font-size: 11px;
+        }
+        .footer-bottom span { color: var(--primary); }
+
+        /* FLOAT */
+        .float-buttons {
+            position: fixed; bottom: 24px; left: 24px;
+            z-index: 999;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .float-btn {
+            display: flex; align-items: center; gap: 8px;
+            color: white; padding: 12px 20px;
+            border-radius: 50px; text-decoration: none;
+            font-weight: 700; font-size: 12px;
+            transition: all 0.3s;
+        }
+        .float-btn i { font-size: 18px; }
+        .float-btn:hover { transform: translateY(-3px); }
+        .float-telegram {
+            background: #0088cc;
+            box-shadow: 0 6px 20px rgba(0,136,204,0.3);
+        }
+        .float-phone {
+            background: var(--primary);
+            box-shadow: 0 6px 20px rgba(204,10,10,0.3);
+        }
+        .scroll-top {
+            position: fixed; bottom: 24px; right: 24px;
+            width: 42px; height: 42px;
+            background: var(--gradient-1);
+            color: white; border: none;
+            border-radius: 12px; font-size: 16px;
+            cursor: pointer; z-index: 999;
+            opacity: 0; visibility: hidden;
+            transition: all 0.3s;
+        }
+        .scroll-top.visible { opacity: 1; visibility: visible; }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none; position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100vh;
+                background: rgba(15,15,26,0.98);
+                flex-direction: column;
+                align-items: center; justify-content: center;
+                gap: 24px;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links a { font-size: 18px; }
+            .burger { display: flex; }
+            .nav-phone { display: none; }
+            .about-wrapper { grid-template-columns: 1fr; gap: 40px; }
+            .hero-stats { gap: 24px; }
+        }
+        @media (max-width: 768px) {
+            section { padding: 60px 0; }
+            .hero-stats { flex-direction: column; gap: 14px; }
+            .hero-buttons { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+            .about-features { grid-template-columns: 1fr; }
+            .about-visual { height: 300px; }
+            .float-btn span { display: none; }
+            .float-btn { padding: 12px; border-radius: 50%; }
+            .footer-content { flex-direction: column; text-align: center; }
+            .footer-links { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-spinner"></div>
+        <div class="preloader-text">Домбай Квадро</div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="logo">
+                <div class="logo-icon"><i class="fas fa-mountain"></i></div>
+                <div class="logo-text">Домбай<span>Квадро</span></div>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#hero" onclick="closeMenu()">Главная</a></li>
+                <li><a href="#tours" onclick="closeMenu()">Маршруты</a></li>
+                <li><a href="#about" onclick="closeMenu()">О нас</a></li>
+                <li><a href="#contact" onclick="closeMenu()">Контакты</a></li>
+            </ul>
+            <a href="tel:+79380294777" class="nav-phone">
+                <i class="fas fa-phone"></i>
+                +7 938 029 4777
+            </a>
+            <div class="burger" id="burger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-mountains">
+            <svg viewBox="0 0 1440 400" preserveAspectRatio="none">
+                <path d="M0,400 L0,280 Q100,180 200,250 Q300,120 400,200 Q450,100 550,180 Q650,60 720,140 Q800,40 900,150 Q1000,80 1100,160 Q1200,100 1300,200 Q1380,140 1440,180 L1440,400 Z" fill="rgba(15,15,26,0.6)"/>
+                <path d="M0,400 L0,320 Q150,240 300,300 Q450,200 600,280 Q750,160 900,260 Q1050,180 1200,270 Q1350,210 1440,250 L1440,400 Z" fill="rgba(15,15,26,0.3)"/>
+            </svg>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-location-dot"></i>
+                Домбай · Теберда
+            </div>
+            <h1>Прокатись на<br><span>квадроцикле</span><br>по крутым маршрутам!</h1>
+            <p class="hero-subtitle">
+                Драйв, красивые места и настоящий отдых от города.<br>
+                <strong>5 маршрутов на выбор</strong> — от лёгких прогулок до экстрима!
+            </p>
+            <div class="hero-buttons">
+                <a href="https://t.me/akhma_travel?text=Привет!%20Хочу%20записаться%20на%20квадроциклы%20🏍" target="_blank" class="btn btn-telegram">
+                    <i class="fab fa-telegram"></i> Записаться в Telegram
+                </a>
+                <a href="tel:+79380294777" class="btn btn-primary">
+                    <i class="fas fa-phone"></i> Позвонить
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-number">5</div>
+                    <div class="hero-stat-label">Маршрутов</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">500+</div>
+                    <div class="hero-stat-label">Клиентов</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">100%</div>
+                    <div class="hero-stat-label">Адреналин</div>
+                </div>
+            </div>
+            <div class="urgency-banner">
+                <i class="fas fa-fire"></i>
+                <strong>Успей забронировать! Мест мало.</strong>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <a href="#tours"><i class="fas fa-chevron-down"></i></a>
+        </div>
+    </section>
+
+    <!-- ADVANTAGES -->
+    <section class="advantages" id="advantages">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Почему мы</div>
+                <h2 class="section-title">Наши <span>преимущества</span></h2>
+            </div>
+            <div class="advantages-grid">
+                <div class="advantage-card">
+                    <div class="advantage-icon"><i class="fas fa-shield-halved"></i></div>
+                    <h3>Безопасность</h3>
+                    <p>Инструктаж и экипировка включены</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-icon"><i class="fas fa-motorcycle"></i></div>
+                    <h3>Мощная техника</h3>
+                    <p>Красные квадроциклы в идеале</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-icon"><i class="fas fa-route"></i></div>
+                    <h3>5 маршрутов</h3>
+                    <p>На любой вкус и уровень</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-icon"><i class="fas fa-camera"></i></div>
+                    <h3>Фото на память</h3>
+                    <p>Яркие моменты с собой</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-icon"><i class="fas fa-users"></i></div>
+                    <h3>Для всех</h3>
+                    <p>Соло, пары, семьи, компании</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-icon"><i class="fas fa-mug-hot"></i></div>
+                    <h3>Пикник в горах</h3>
+                    <p>Чай на вершине по желанию</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOURS -->
+    <section class="tours" id="tours">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Маршруты</div>
+                <h2 class="section-title">5 маршрутов <span>на выбор</span></h2>
+            </div>
+            <div class="tours-grid">
+
+                <!-- 1. Заброшенный городок -->
+                <div class="tour-card">
+                    <div class="tour-image">
+                        <img src="https://github.com/AkhmatK/-/blob/main/%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%BE/1.jpg?raw=true" alt="Заброшенный городок">
+                        <div class="tour-image-overlay"></div>
+                        <div class="tour-difficulty"><span class="difficulty-easy">Лёгкий</span></div>
+                    </div>
+                    <div class="tour-content">
+                        <h3>Заброшенный городок</h3>
+                        <p>Короткая поездка по атмосферному городку, застывшему во времени.</p>
+                        <div class="tour-meta">
+                            <div class="tour-meta-item"><i class="far fa-clock"></i> ~1 час</div>
+                        </div>
+                        <div class="tour-footer">
+                            <div class="tour-price">Уточнить цену</div>
+                            <a href="https://t.me/akhma_travel?text=Привет!%20Интересует%20маршрут%20%22Заброшенный%20городок%22%20🏚" target="_blank" class="tour-btn">Записаться</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Хвойный -->
+                <div class="tour-card">
+                    <div class="tour-image">
+                        <img src="https://github.com/AkhmatK/-/blob/main/%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%BE/2.jpg?raw=true" alt="Хвойный">
+                        <div class="tour-image-overlay"></div>
+                        <div class="tour-difficulty"><span class="difficulty-easy">Лёгкий</span></div>
+                    </div>
+                    <div class="tour-content">
+                        <h3>Хвойный</h3>
+                        <p>Плавный и безопасный маршрут для первого раза вдоль ущелья.</p>
+                        <div class="tour-meta">
+                            <div class="tour-meta-item"><i class="far fa-clock"></i> ~1.5 часа</div>
+                            <div class="tour-meta-item"><i class="fas fa-heart"></i> Для новичков</div>
+                        </div>
+                        <div class="tour-footer">
+                            <div class="tour-price">Уточнить цену</div>
+                            <a href="https://t.me/akhma_travel?text=Привет!%20Интересует%20маршрут%20%22Хвойный%22%20🌲" target="_blank" class="tour-btn">Записаться</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Нарзанный источник -->
+                <div class="tour-card">
+                    <div class="tour-image">
+                        <img src="https://github.com/AkhmatK/-/blob/main/%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%BE/3.jpg?raw=true" alt="Нарзанный источник">
+                        <div class="tour-image-overlay"></div>
+                        <div class="tour-difficulty"><span class="difficulty-medium">Средний</span></div>
+                    </div>
+                    <div class="tour-content">
+                        <h3>Нарзанный источник</h3>
+                        <p>Путешествие к природному минеральному источнику, бьющему из-под земли.</p>
+                        <div class="tour-meta">
+                            <div class="tour-meta-item"><i class="far fa-clock"></i> ~2 часа</div>
+                        </div>
+                        <div class="tour-footer">
+                            <div class="tour-price">Уточнить цену</div>
+                            <a href="https://t.me/akhma_travel?text=Привет!%20Интересует%20маршрут%20%22Нарзанный%20источник%22%20💧" target="_blank" class="tour-btn">Записаться</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Мухинское ущелье -->
+                <div class="tour-card featured">
+                    <div class="tour-badge">Хит</div>
+                    <div class="tour-image">
+                        <img src="https://github.com/AkhmatK/-/blob/main/%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%BE/4.jpg?raw=true" alt="Мухинское ущелье">
+                        <div class="tour-image-overlay"></div>
+                        <div class="tour-difficulty"><span class="difficulty-medium">Средний</span></div>
+                    </div>
+                    <div class="tour-content">
+                        <h3>Мухинское ущелье</h3>
+                        <p>Самый живописный маршрут с подъёмом в горы. Пикник с чаем на вершине!</p>
+                        <div class="tour-meta">
+                            <div class="tour-meta-item"><i class="far fa-clock"></i> ~3 часа</div>
+                            <div class="tour-meta-item"><i class="fas fa-mug-hot"></i> Пикник</div>
+                        </div>
+                        <div class="tour-footer">
+                            <div class="tour-price">Уточнить цену</div>
+                            <a href="https://t.me/akhma_travel?text=Привет!%20Интересует%20маршрут%20%22Мухинское%20ущелье%22%20🏔%20с%20пикником!" target="_blank" class="tour-btn">Записаться</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Зимнее безумие -->
+                <div class="tour-card">
+                    <div class="tour-badge">Экстрим</div>
+                    <div class="tour-image">
+                        <img src="https://github.com/AkhmatK/-/blob/main/%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%BE/5.jpg?raw=true" alt="Зимнее безумие">
+                        <div class="tour-image-overlay"></div>
+                        <div class="tour-difficulty"><span class="difficulty-hard">Экстрим</span></div>
+                    </div>
+                    <div class="tour-content">
+                        <h3>Зимнее безумие</h3>
+                        <p>Квадроцикл + снегоход! Штурм Мухинского ущелья по снегу. Заснеженные горы!</p>
+                        <div class="tour-meta">
+                            <div class="tour-meta-item"><i class="far fa-clock"></i> ~4 часа</div>
+                            <div class="tour-meta-item"><i class="fas fa-fire"></i> Макс. драйв</div>
+                        </div>
+                        <div class="tour-footer">
+                            <div class="tour-price">Уточнить цену</div>
+                            <a href="https://t.me/akhma_travel?text=Привет!%20Хочу%20экстрим%20%22Зимнее%20безумие%22%20❄️🔥" target="_blank" class="tour-btn">Записаться</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-wrapper">
+                <div class="about-visual">
+                    <img src="https://github.com/AkhmatK/-/blob/main/%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%BE/3,1.jpg?raw=true" alt="Домбай Квадро">
+                    <div class="about-experience">
+                        <div class="about-experience-number">5</div>
+                        <div class="about-experience-text">Маршрутов</div>
+                    </div>
+                    <div class="about-float-card">
+                        <i class="fas fa-star"></i>
+                        <div>
+                            <strong>4.9</strong>
+                            <span>Рейтинг</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <div class="section-tag">О нас</div>
+                    <h2 class="section-title">Домбай <span>Квадро</span></h2>
+                    <p class="about-text">
+                        Мы знаем каждую тропу Домбая и Теберды. Покажем красоту Кавказа так, что запомните навсегда!
+                    </p>
+                    <p class="about-text">
+                        Это драйв, красивые места и настоящий отдых от города. От атмосферных прогулок до экстремального микса квадроцикл + снегоход.
+                    </p>
+                    <div class="about-features">
+                        <div class="about-feature"><i class="fas fa-check"></i><span>Опытные гиды</span></div>
+                        <div class="about-feature"><i class="fas fa-check"></i><span>Красные квадроциклы</span></div>
+                        <div class="about-feature"><i class="fas fa-check"></i><span>Экипировка включена</span></div>
+                        <div class="about-feature"><i class="fas fa-check"></i><span>Снегоходы зимой</span></div>
+                    </div>
+                    <a href="https://t.me/akhma_travel?text=Привет!%20Хочу%20записаться%20на%20квадроциклы%20🏍" target="_blank" class="btn btn-telegram">
+                        <i class="fab fa-telegram"></i> Написать в Telegram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2>Готовы к приключению?</h2>
+            <p>Успей забронировать — мест мало! Напиши в Telegram или позвони.</p>
+            <div class="hero-buttons" style="margin-top:30px;">
+                <a href="https://t.me/akhma_travel?text=Привет!%20Хочу%20забронировать%20квадроциклы!" target="_blank" class="btn btn-outline">
+                    <i class="fab fa-telegram"></i> Telegram
+                </a>
+                <a href="tel:+79380294777" class="btn btn-outline">
+                    <i class="fas fa-phone"></i> +7 938 029 4777
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Вопросы</div>
+                <h2 class="section-title">Частые <span>вопросы</span></h2>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        Нужен ли опыт? <i class="fas fa-plus"></i>
+                    </button>
+                    <div class="faq-answer"><div class="faq-answer-inner">Нет! Проводим инструктаж перед каждой поездкой. Маршрут «Хвойный» идеален для первого раза.</div></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        Что входит в стоимость? <i class="fas fa-plus"></i>
+                    </button>
+                    <div class="faq-answer"><div class="faq-answer-inner">Квадроцикл, экипировка (шлем, перчатки), инструктаж, сопровождение гида. Пикник с чаем на «Мухинском ущелье» — по желанию.</div></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        Что такое «Зимнее безумие»? <i class="fas fa-plus"></i>
+                    </button>
+                    <div class="faq-answer"><div class="faq-answer-inner">Экстрим-микс: стартуете на квадроцикле, потом пересадка на снегоход и штурм Мухинского ущелья по снегу!</div></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        Как записаться? <i class="fas fa-plus"></i>
+                    </button>
+                    <div class="faq-answer"><div class="faq-answer-inner">Напишите в Telegram @akhma_travel или позвоните: +7 938 029 4777, +7 928 383 3380</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">Контакты</div>
+                <h2 class="section-title">Как <span>записаться</span></h2>
+            </div>
+            <div class="contact-cards">
+                <div class="contact-card">
+                    <div class="contact-card-icon tg"><i class="fab fa-telegram"></i></div>
+                    <h3>Telegram</h3>
+                    <p>Самый быстрый способ записаться!</p>
+                    <a href="https://t.me/akhma_travel?text=Привет!%20Хочу%20записаться%20на%20квадроциклы%20🏍" target="_blank" class="btn btn-telegram">
+                        <i class="fab fa-telegram"></i> @akhma_travel
+                    </a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-icon phone"><i class="fas fa-phone"></i></div>
+                    <h3>Телефоны</h3>
+                    <p>Звоните — ответим и всё расскажем!</p>
+                    <a href="tel:+79380294777" class="btn btn-primary">
+                        <i class="fas fa-phone"></i> +7 938 029 4777
+                    </a>
+                    <a href="tel:+79283833380" class="btn btn-primary" style="margin-top:10px;">
+                        <i class="fas fa-phone"></i> +7 928 383 3380
+                    </a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-icon map"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3>Точка сбора</h3>
+                    <p>Домбай / Теберда — встретим вас!</p>
+                    <a href="https://yandex.ru/navi/org/ekskursii_na_kvadrotsiklakh/146893064394" target="_blank" class="btn btn-outline" style="border-color:rgba(255,255,255,0.2);">
+                        <i class="fas fa-map"></i> Открыть на карте
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="#hero" class="logo">
+                        <div class="logo-icon"><i class="fas fa-mountain"></i></div>
+                        <div class="logo-text">Домбай<span>Квадро</span></div>
+                    </a>
+                    <p>Экскурсии на квадроциклах в Домбае</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#tours">Маршруты</a>
+                    <a href="#about">О нас</a>
+                    <a href="#contact">Контакты</a>
+                    <a href="https://t.me/akhma_travel" target="_blank">Telegram</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2024 <span>Домбай Квадро</span> — Драйв, красота и отдых ❤️
+            </div>
+        </div>
+    </footer>
+
+    <!-- FLOAT BUTTONS -->
+    <div class="float-buttons">
+        <a href="https://t.me/akhma_travel?text=Привет!%20Хочу%20записаться%20на%20квадроциклы%20🏍" target="_blank" class="float-btn float-telegram">
+            <i class="fab fa-telegram"></i>
+            <span>Telegram</span>
+        </a>
+        <a href="tel:+79380294777" class="float-btn float-phone">
+            <i class="fas fa-phone"></i>
+            <span>Позвонить</span>
+        </a>
+    </div>
+
+    <!-- SCROLL TOP -->
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        setTimeout(function() {
+            document.getElementById('preloader').classList.add('hidden');
+        }, 600);
+
+        window.addEventListener('scroll', function() {
+            var navbar = document.getElementById('navbar');
+            var scrollBtn = document.getElementById('scrollTop');
+            if (window.scrollY > 60) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+            if (window.scrollY > 300) scrollBtn.classList.add('visible');
+            else scrollBtn.classList.remove('visible');
+        });
+
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+            document.getElementById('burger').classList.toggle('active');
+        }
+        function closeMenu() {
+            document.getElementById('navLinks').classList.remove('active');
+            document.getElementById('burger').classList.remove('active');
+        }
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function toggleFAQ(btn) {
+            var item = btn.parentElement;
+            var isActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('active'); });
+            if (!isActive) item.classList.add('active');
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                var t = document.querySelector(this.getAttribute('href'));
+                if (t) t.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
